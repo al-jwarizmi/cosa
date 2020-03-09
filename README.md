@@ -1,0 +1,2 @@
+# cosa
+computer optic semantics
