@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from sklearn.cluster import KMeans
 from scipy.ndimage.filters import gaussian_filter
 from scipy.ndimage.interpolation import map_coordinates
 
