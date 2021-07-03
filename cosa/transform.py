@@ -35,9 +35,9 @@ def elastic_transform(
 ):
     """Elastic deformation of imgs as described in [Simard2003]
     Simard, Steinkraus and Platt, "Best Practices for
-    Convolutional Neural Networks applied to Visual Document Analysis", in
-    Proc. of the International Conference on Document Analysis and
-    Recognition, 2003.
+    Convolutional Neural Networks applied to Visual Document
+    Analysis", in Proc. of the International Conference on
+    Document Analysis and Recognition, 2003.
     """
     if random_state is None:
         random_state = np.random.RandomState(None)
@@ -54,7 +54,11 @@ def elastic_transform(
         )
         * alpha
     )
-    x, y, z = np.meshgrid(np.arange(shape[1]), np.arange(shape[0]), np.arange(shape[2]))
+    x, y, z = np.meshgrid(
+        np.arange(shape[1]),
+        np.arange(shape[0]),
+        np.arange(shape[2]),
+    )
     indices = (
         np.reshape(y + dy, (-1, 1)),
         np.reshape(x + dx, (-1, 1)),
