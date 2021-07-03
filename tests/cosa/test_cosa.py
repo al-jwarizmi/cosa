@@ -11,7 +11,6 @@ def test_read():
     cosa.read("tests/test_files/miso.jpg")
     assert cosa.image is not None
     # Non-existing file
-
     assert cosa.image is not None
     with pytest.raises(ValueError):
         cosa.read("tests/test_files/fake.jpg")

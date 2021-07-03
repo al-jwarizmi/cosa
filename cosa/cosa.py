@@ -34,9 +34,7 @@ class Cosa:
         """
         funcs_list = list(FUNCTIONS.keys())
         if func not in funcs_list:
-            raise ValueError(
-                f"{func} function not supported."
-            )
+            raise ValueError(f"{func} function not supported.")
         if not func:
             func = random.choice(funcs_list)
         self.transformed = FUNCTIONS[func](img=self.img, **args)
