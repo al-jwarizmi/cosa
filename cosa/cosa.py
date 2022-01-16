@@ -1,6 +1,6 @@
 from pathlib import Path
 from random import random
-from typing import Callable, Optional
+from typing import Optional
 from cosa.transform import k_representative_pallette, elastic_transform
 from PIL import Image
 import numpy as np
@@ -35,13 +35,13 @@ class Cosa:
         else:
             raise ValueError(f"File {input_path} does not exist!")
 
-    def transform(self, func: Optional[Callable] = None, **args) -> None:
+    def transform(self, func: Optional[str] = None, **args) -> None:
         """Transform a loaded image with a given
         functions. If the function is not specified
         one will be chosen randomly.
 
         Args:
-            func (Optional[Callable]): The name of the function
+            func (Optional[str]): The name of the function
                 that will be applied as a transformation to the
                 image.
             **args
@@ -54,7 +54,7 @@ class Cosa:
             raise ValueError(f"{func} function not supported.")
         if not func:
             func = random.choice(funcs_list)
-        self.transformed = FUNCTIONS[func](img=self.img, **args)
+        self.transformed = FUNCTIONS[func](image=self.image, **args)
 
     def save(self, output_path: str) -> None:
         """Save an image in a given path.
