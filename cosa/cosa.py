@@ -1,5 +1,5 @@
 from pathlib import Path
-from random import random
+from random import choice
 from typing import Optional
 from cosa.transform import k_representative_pallette, elastic_transform
 from PIL import Image
@@ -50,14 +50,14 @@ class Cosa:
             None
         """
         funcs_list = list(FUNCTIONS.keys())
-        if func not in funcs_list:
+        if func not in funcs_list and func is not None:
             raise ValueError(f"{func} function not supported.")
         if not func:
-            func = random.choice(funcs_list)
+            func = choice(funcs_list)
         self.transformed = FUNCTIONS[func](image=self.image, **args)
 
-    def save(self, output_path: str) -> None:
-        """Save an image in a given path.
+    def write(self, output_path: str) -> None:
+        """Write an image in a given path.
 
         Args:
             output_path (str): The path to the image that
@@ -70,8 +70,6 @@ class Cosa:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         if self.transformed is None:
             raise ValueError(
-                "There is no image to save! Make sure to load & transform one first."
+                "There is no image to write! Make sure to load & transform one first."
             )
-        with output_path.open("wb") as file:
-            file.write(self.transformed.content)
-            file.close()
+        self.transformed.save(output_path)
