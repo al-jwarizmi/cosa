@@ -57,4 +57,4 @@ jobs:
         shell: bash
       - name: Run tests
         run: |
-          pytest tests/ -n auto
+          pytest tests/
