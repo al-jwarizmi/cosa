@@ -23,7 +23,7 @@ def k_representative_pallette(image, num_clusters=random.randint(4, 5)):
         slicer = model.labels_ == i
         new_image[slicer] = colors[i]
     new_image = np.reshape(new_image, (ysize, xsize, 3))
-
+    new_image = Image.fromarray((new_image * 255).astype(np.uint8))
     return new_image
 
 
