@@ -3,7 +3,7 @@ Computer Optic Semantics
 
 to install run:
 
-`pip install cosa`
+`pip install co_sa`
 
 ## Working environment:
 
