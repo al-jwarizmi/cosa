@@ -12,4 +12,5 @@ setup(name='co_sa',
    'scikit-learn',
    'numpy'
    ],
-   zip_safe=False)
+   zip_safe=False,
+)

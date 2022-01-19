@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "**.py"
+      - "**.ipynb"
+      - "setup.cfg"
+      - ".github/workflows/**.yml"
+      - "requirements_dev.txt"
+      - "requirements.txt"
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "**.py"
+      - "setup.cfg"
+      - ".github/workflows/**.yml"
+      - "requirements_dev.txt"
+      - "requirements.txt"
+
+jobs:
+  python-tests:
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Upgrade pip
+        run: |
+          pip install --upgrade --user pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-py${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-py${{ matrix.python-version }}-
+      - name: Install dependencies
+        run: |
+          hash -r
+          pip install -r requirements_dev.txt
+          pip install -e .
+        shell: bash
+      - name: Run tests
+        run: |
+          pytest tests/
