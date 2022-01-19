@@ -1,7 +1,7 @@
 from setuptools import setup
 
-setup(name='cosa',
-    version='0.0.3',
+setup(name='cosabot',
+    version='0.0.4',
     description='Computer Optic Semantics',
     packages=['cosa'],
     author = 'Alfredo Lozano',
