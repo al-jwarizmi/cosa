@@ -1,1 +1,2 @@
-from .Image import Image
+# flake8: noqa
+from .cosa import Cosa
