@@ -1,13 +1,14 @@
 from pathlib import Path
 from random import choice
 from typing import Optional
-from cosa.transform import k_representative_pallette, elastic_transform
+from cosa.transform import k_representative_pallette, elastic_transform, jpeg
 from PIL import Image
 import numpy as np
 
 FUNCTIONS = {
     "k_rep": k_representative_pallette,
     "elastic": elastic_transform,
+    "jpeg": jpeg,
 }
 
 

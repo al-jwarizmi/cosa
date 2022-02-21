@@ -27,7 +27,7 @@ def test_write():
     cosa.read(input_path)
     # Non-existing file
     assert cosa.image is not None
-    cosa.transform("elastic")
+    cosa.transform("jpeg")
     assert cosa.transformed is not None
     cosa.write(output_path)
     assert Path(output_path).is_file()
@@ -54,4 +54,16 @@ def test_elastic():
     # Non-existing file
     assert cosa.image is not None
     cosa.transform("elastic")
+    assert cosa.transformed is not None
+
+
+def test_jpeg():
+    """Test `jpeg` transformation."""
+    input_path = "tests/test_files/miso.jpg"
+    cosa = Cosa()
+    # Existing file
+    cosa.read(input_path)
+    # Non-existing file
+    assert cosa.image is not None
+    cosa.transform("jpeg")
     assert cosa.transformed is not None

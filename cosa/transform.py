@@ -1,4 +1,5 @@
 import random
+from pathlib import Path
 import numpy as np
 from numpy.random import RandomState
 from sklearn.cluster import KMeans
@@ -71,3 +72,20 @@ def elastic_transform(
     dist_reshaped = distored_image.reshape(image.shape)
     dist_reshaped = Image.fromarray(dist_reshaped)
     return dist_reshaped
+
+
+def jpeg(image: np.ndarray, iterations: int = 100) -> Image:
+    """Applies a JPEG compression `iterations` times.
+    This is inspired by the `JPEG Bot`. For more info,
+    see:
+    `https://mikewatson.me/bots/JPEGBot`
+    """
+    im = Image.fromarray(image)
+    temp_file_path = "/tmp/jpeg_transoform_cosa.jpeg"
+    temp_file_path = Path(temp_file_path)
+    temp_file_path.parent.mkdir(parents=True, exist_ok=True)
+    im.save(temp_file_path, format="JPEG", quality=100)
+    for i in range(100):
+        im = Image.open(temp_file_path)
+        im.save(temp_file_path, format="JPEG", quality=115 - i)
+    return Image.open(temp_file_path)
