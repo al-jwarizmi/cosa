@@ -1,12 +1,15 @@
 import random
 import numpy as np
+from numpy.random import RandomState
 from sklearn.cluster import KMeans
 from PIL import Image
 from scipy.ndimage.filters import gaussian_filter
 from scipy.ndimage.interpolation import map_coordinates
 
 
-def k_representative_pallette(image, num_clusters=random.randint(4, 5)):
+def k_representative_pallette(
+    image: np.ndarray, num_clusters: int = random.randint(4, 5)
+) -> Image:
     """Cluster pixels into num_clusters representative colors
     and transform image into to this discrete palette
     """
@@ -28,11 +31,11 @@ def k_representative_pallette(image, num_clusters=random.randint(4, 5)):
 
 
 def elastic_transform(
-    image,
-    alpha=random.randint(900, 1000),
-    sigma=random.randint(4, 8),
-    random_state=None,
-):
+    image: np.ndarray,
+    alpha: int = random.randint(900, 1000),
+    sigma: int = random.randint(4, 8),
+    random_state: RandomState = None,
+) -> Image:
     """Elastic deformation of images as described in [Simard2003]
     Simard, Steinkraus and Platt, "Best Practices for
     Convolutional Neural Networks applied to Visual Document
@@ -40,7 +43,7 @@ def elastic_transform(
     Document Analysis and Recognition, 2003.
     """
     if random_state is None:
-        random_state = np.random.RandomState(None)
+        random_state = RandomState(None)
     shape = image.shape
     dx = (
         gaussian_filter(
