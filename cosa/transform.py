@@ -222,11 +222,8 @@ def voronoi(image: np.ndarray, num_cells: int = 3000) -> Image:
     rgb_im = im.convert("RGB")
     width, height = im.size
     if num_cells > ((width * height) / 10):
-        print("Sorry your image ist too small, or you want to many polygons.")
-        quit()
-    if num_cells <= 5:
-        print("you have to have more than 5 cells")
-        quit()
+        raise ValueError("Sorry your image ist too small, or you want to many polygons.")
+    assert num_cells > 5, "There must be at least 6 cells!"
     image = Image.new("RGB", (width, height))
     draw = ImageDraw.Draw(image)
     makeup_polygons(draw, num_cells, width, height, rgb_im, False)
