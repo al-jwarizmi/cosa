@@ -203,7 +203,7 @@ def makeup_polygons(draw, num_cells, width, height, rgb_im, random):
             draw.polygon(polygon_tuples, rgb)
 
 
-def voronoi(image: np.ndarray, num_cells: int = 2000) -> Image:
+def voronoi(image: np.ndarray, num_cells: int = 3000) -> Image:
     """Creates a Voronoi diagram from a given image.
     This code was originally obtained from:
     `https://github.com/Stunkymonkey/voronoi-image`
