@@ -82,7 +82,7 @@ def jpeg(image: np.ndarray, iterations: int = 100) -> Image:
     `https://mikewatson.me/bots/JPEGBot`
     """
     im = Image.fromarray(image)
-    temp_file_path = "/tmp/jpeg_transoform_cosa.jpeg"
+    temp_file_path = "/tmp/jpeg_transform_cosa.jpeg"
     temp_file_path = Path(temp_file_path)
     temp_file_path.parent.mkdir(parents=True, exist_ok=True)
     im.save(temp_file_path, format="JPEG", quality=100)
@@ -203,7 +203,7 @@ def makeup_polygons(draw, num_cells, width, height, rgb_im, random):
             draw.polygon(polygon_tuples, rgb)
 
 
-def voronoi(image: np.ndarray, num_cells: int = 1000) -> Image:
+def voronoi(image: np.ndarray, num_cells: int = 2000) -> Image:
     """Creates a Voronoi diagram from a given image.
     This code was originally obtained from:
     `https://github.com/Stunkymonkey/voronoi-image`
@@ -218,21 +218,16 @@ def voronoi(image: np.ndarray, num_cells: int = 1000) -> Image:
     Returns:
         - Image: The image after the transformation.
     """
-
-    im = Image.fromarray(image)
+    im = Image.fromarray(image).convert("RGB")
     rgb_im = im.convert("RGB")
     width, height = im.size
-
     if num_cells > ((width * height) / 10):
         print("Sorry your image ist too small, or you want to many polygons.")
         quit()
     if num_cells <= 5:
         print("you have to have more than 5 cells")
         quit()
-
     image = Image.new("RGB", (width, height))
     draw = ImageDraw.Draw(image)
-
-    makeup_polygons(draw, num_cells, width, height, rgb_im, random)
-
+    makeup_polygons(draw, num_cells, width, height, rgb_im, False)
     return image
