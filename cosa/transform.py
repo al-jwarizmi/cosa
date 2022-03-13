@@ -113,7 +113,9 @@ def voronoi(image: np.ndarray, num_cells: int = 3000) -> Image:
     width, height = im.size
     # Assert parameter values
     if num_cells > ((width * height) / 10):
-        raise ValueError("Sorry your image ist too small, or you want to many polygons.")
+        raise ValueError(
+            "Sorry your image ist too small, or you want to many polygons."
+        )
     assert num_cells > 5, "There must be at least 6 cells!"
     # Build Voronoi image
     image = Image.new("RGB", (width, height))
