@@ -3,9 +3,10 @@ from pathlib import Path
 import numpy as np
 from numpy.random import RandomState
 from sklearn.cluster import KMeans
-from PIL import Image
+from PIL import Image, ImageDraw
 from scipy.ndimage.filters import gaussian_filter
 from scipy.ndimage.interpolation import map_coordinates
+from cosa.utils import makeup_polygons
 
 
 def k_representative_pallette(
@@ -81,7 +82,7 @@ def jpeg(image: np.ndarray, iterations: int = 100) -> Image:
     `https://mikewatson.me/bots/JPEGBot`
     """
     im = Image.fromarray(image)
-    temp_file_path = "/tmp/jpeg_transoform_cosa.jpeg"
+    temp_file_path = "/tmp/jpeg_transform_cosa.jpeg"
     temp_file_path = Path(temp_file_path)
     temp_file_path.parent.mkdir(parents=True, exist_ok=True)
     im.save(temp_file_path, format="JPEG", quality=100)
@@ -89,3 +90,35 @@ def jpeg(image: np.ndarray, iterations: int = 100) -> Image:
         im = Image.open(temp_file_path)
         im.save(temp_file_path, format="JPEG", quality=115 - i)
     return Image.open(temp_file_path)
+
+
+def voronoi(image: np.ndarray, num_cells: int = 3000) -> Image:
+    """Creates a Voronoi diagram from a given image.
+    This code was originally obtained from:
+    `https://github.com/Stunkymonkey/voronoi-image`
+    and adapted for COSA.
+
+    Args:
+        - image (np.ndarray): The image on which the
+            transformation will be applied.
+        - num_cells (int): The number of (random) points
+            the Voronoi diagram will have.
+
+    Returns:
+        - Image: The image after the transformation.
+    """
+    # Load image and parameters
+    im = Image.fromarray(image).convert("RGB")
+    rgb_im = im.convert("RGB")
+    width, height = im.size
+    # Assert parameter values
+    if num_cells > ((width * height) / 10):
+        raise ValueError(
+            "Sorry your image ist too small, or you want to many polygons."
+        )
+    assert num_cells > 5, "There must be at least 6 cells!"
+    # Build Voronoi image
+    image = Image.new("RGB", (width, height))
+    draw = ImageDraw.Draw(image)
+    makeup_polygons(draw, num_cells, width, height, rgb_im, False)
+    return image
