@@ -79,3 +79,14 @@ def test_voronoi():
     assert cosa.image is not None
     cosa.transform("voronoi")
     assert cosa.transformed is not None
+
+def test_dither():
+    """Test `dither` transformation."""
+    input_path = "tests/test_files/miso.jpg"
+    cosa = Cosa()
+    # Existing file
+    cosa.read(input_path)
+    # Non-existing file
+    assert cosa.image is not None
+    cosa.transform("dither")
+    assert cosa.transformed is not None
