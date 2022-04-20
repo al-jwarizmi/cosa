@@ -1,7 +1,14 @@
 from pathlib import Path
 from random import choice
 from typing import Optional
-from cosa.transform import k_representative_pallette, elastic_transform, jpeg, voronoi, dither
+from cosa.transform import (
+    k_representative_pallette,
+    elastic_transform,
+    jpeg,
+    voronoi,
+    dither,
+    intarsia,
+)
 from PIL import Image
 import numpy as np
 
@@ -10,7 +17,8 @@ FUNCTIONS = {
     "elastic": elastic_transform,
     "jpeg": jpeg,
     "voronoi": voronoi,
-    "dither" : dither,
+    "dither": dither,
+    "intarsia": intarsia,
 }
 
 

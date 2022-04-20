@@ -124,16 +124,12 @@ def voronoi(image: np.ndarray, num_cells: int = 3000) -> Image:
     makeup_polygons(draw, num_cells, width, height, rgb_im, False)
     return image
 
+
 def dither(
-    image, 
-    colors = None, 
-    colorstops = None, 
-    saveOutput = True, 
-    outputType = "", 
-    showFinal = True
-    ) -> Image:
+    image, colors=None, colorstops=None, saveOutput=True, outputType="", showFinal=True
+) -> Image:
     """
-    A basic python function to dither a target image. 
+    A basic python function to dither a target image.
     Uses the Floyd-Steinberg dithering algorithm
     see: https://github.com/CarpenterD/python-dithering
     """
@@ -141,47 +137,49 @@ def dither(
     im = Image.fromarray(image).convert("RGB")
 
     def getClosestColor(c, colors):
-        """ Returns closest color in 'colors' to target 'c'. All colors are represented
-            as RGB tuples.\n
-            Method runs in O(N) time, where 'N' is the size of 'colors'. \n
-            PARAMETERS:\n
-            \tc : Target color to be approximated, formatted as an RGB tuple\n
-            \tcolors : a list containing all valid color options, each formatted as an RGB tuple\n
-            RETURNS:\n
-            \tnearest: the closest avaliable RGB tuple to 'c' contained within 'colors'
+        """Returns closest color in 'colors' to target 'c'. All colors are represented
+        as RGB tuples.\n
+        Method runs in O(N) time, where 'N' is the size of 'colors'. \n
+        PARAMETERS:\n
+        \tc : Target color to be approximated, formatted as an RGB tuple\n
+        \tcolors : a list containing all valid color options, each formatted as an RGB tuple\n
+        RETURNS:\n
+        \tnearest: the closest avaliable RGB tuple to 'c' contained within 'colors'
         """
-        nearest = (0, 0, 0)# always overridden in first iteration of for loop
-        minDiff = 1000     # initialised to be greater than all possible differences
+        nearest = (0, 0, 0)  # always overridden in first iteration of for loop
+        minDiff = 1000  # initialised to be greater than all possible differences
         for col in colors:
-            diff = sqrt((col[0]-c[0])**2 + (col[1]-c[1])**2 + (col[2]-c[2])**2)
-            if(diff < minDiff):
+            diff = sqrt(
+                (col[0] - c[0]) ** 2 + (col[1] - c[1]) ** 2 + (col[2] - c[2]) ** 2
+            )
+            if diff < minDiff:
                 minDiff = diff
                 nearest = col
         return nearest
 
     def clamp(x):
-        """ Clamps a given number between 0 and 255.\n
-            PARAMETERS:\n
-            \tx: Input number to be clamped\n
-            RETURNS:\n
-            \tclamped: The value of 'x' clamped between 0 and 255
+        """Clamps a given number between 0 and 255.\n
+        PARAMETERS:\n
+        \tx: Input number to be clamped\n
+        RETURNS:\n
+        \tclamped: The value of 'x' clamped between 0 and 255
         """
         return max(0, min(255, x))
 
     def applyErr(tup, err, factor):
-        """ Adds a percentage of quantization error to specified tuple\n
-            PARAMETERS:\n
-            \ttup: Three (3) dimensional tuple containing data\n
-            \terr: Three (3) dimensional tuple containing quantization error\n
-            \tfactor: Percentage of 'err' to be applied to 'tup'\n
-            RETURNS:\n
-            \t(r,g,b): Three (3) dimensional tuple containing the input data with
-                specified amount of error added. Values are rounded and clamped
-                between 0 and 255
+        """Adds a percentage of quantization error to specified tuple\n
+        PARAMETERS:\n
+        \ttup: Three (3) dimensional tuple containing data\n
+        \terr: Three (3) dimensional tuple containing quantization error\n
+        \tfactor: Percentage of 'err' to be applied to 'tup'\n
+        RETURNS:\n
+        \t(r,g,b): Three (3) dimensional tuple containing the input data with
+            specified amount of error added. Values are rounded and clamped
+            between 0 and 255
         """
-        r = clamp(int(tup[0] + err[0]*factor))
-        g = clamp(int(tup[1] + err[1]*factor))
-        b = clamp(int(tup[2] + err[2]*factor))
+        r = clamp(int(tup[0] + err[0] * factor))
+        g = clamp(int(tup[1] + err[1] * factor))
+        b = clamp(int(tup[2] + err[2] * factor))
         return r, g, b
 
     mode, size = im.mode, im.size
@@ -189,29 +187,67 @@ def dither(
     pix = list(im.getdata())
     im.close()
 
-    COLORS = [(0,0,0), (0,102,102), (250,250,250)]
+    COLORS = [(0, 0, 0), (0, 102, 102), (250, 250, 250)]
 
-    #lambda expression to flatten x,y location
+    # lambda expression to flatten x,y location
     index = lambda x, y: x + y * width
-    #Floyd-Steinberg dithering. https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering
+    # Floyd-Steinberg dithering. https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering
     for y in range(int(height)):
         for x in range(int(width)):
             old = pix[index(x, y)]
             new = getClosestColor(old, COLORS)
-            pix[index(x,y)] = new
-            #calculates difference in r/g/b channels
-            err = (old[0]-new[0], old[1]-new[1], old[2]-new[2])
+            pix[index(x, y)] = new
+            # calculates difference in r/g/b channels
+            err = (old[0] - new[0], old[1] - new[1], old[2] - new[2])
 
-            if (x != width-1):
-                pix[index(x+1,y)] = applyErr(pix[index(x+1,y)], err, 7/16)
-            if (y != height-1):
-                pix[index(x,y+1)] = applyErr(pix[index(x,y+1)], err, 5/16)
-                if (x > 0):
-                    pix[index(x-1,y+1)] = applyErr(pix[index(x-1,y+1)], err, 3/16)
-                if (x != width-1):
-                    pix[index(x+1,y+1)] = applyErr(pix[index(x+1,y+1)], err, 1/16)
+            if x != width - 1:
+                pix[index(x + 1, y)] = applyErr(pix[index(x + 1, y)], err, 7 / 16)
+            if y != height - 1:
+                pix[index(x, y + 1)] = applyErr(pix[index(x, y + 1)], err, 5 / 16)
+                if x > 0:
+                    pix[index(x - 1, y + 1)] = applyErr(
+                        pix[index(x - 1, y + 1)], err, 3 / 16
+                    )
+                if x != width - 1:
+                    pix[index(x + 1, y + 1)] = applyErr(
+                        pix[index(x + 1, y + 1)], err, 1 / 16
+                    )
 
     newIm = Image.new(mode, size)
     newIm.putdata(pix)
 
     return newIm
+
+
+def intarsia(
+    image: np.ndarray,
+    height: int,
+    width: int,
+    num_colours: int,
+) -> Image:
+    """Creates an "intarsia diagram", from a given image.
+    For more information on intarsia see:
+    `https://en.wikipedia.org/wiki/Intarsia_(knitting)`
+    The idea is that this function takes an image, resizes it
+    down, restricts the number of colours, and then resizes it
+    back to its original shape.
+
+    Args:
+        - image (np.ndarray): The image on which the
+            transformation will be applied.
+        - height (int): The height of the intarsia diagram.
+        - width (int): The width of the intarsia diagram.
+        - num_colours (int): The number of colours that the
+            intarsia diagram will have.
+
+    Returns:
+        - Image: The image after the transformation.
+    """
+    new_image = Image.fromarray(image)
+    ysize = image.shape[0]
+    xsize = image.shape[1]
+    new_image = new_image.resize((width, height), Image.BILINEAR)
+    new_image = new_image.quantize(colors=num_colours)
+    new_image = new_image.convert("RGB")
+    new_image = new_image.resize((xsize, ysize), Image.NEAREST)
+    return new_image
