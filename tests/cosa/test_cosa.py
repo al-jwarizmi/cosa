@@ -27,7 +27,7 @@ def test_write():
     cosa.read(input_path)
     # Non-existing file
     assert cosa.image is not None
-    cosa.transform("voronoi")
+    cosa.transform("intarsia", height=50, width=50, num_colours=4)
     assert cosa.transformed is not None
     cosa.write(output_path)
     assert Path(output_path).is_file()
@@ -80,6 +80,7 @@ def test_voronoi():
     cosa.transform("voronoi")
     assert cosa.transformed is not None
 
+
 def test_dither():
     """Test `dither` transformation."""
     input_path = "tests/test_files/miso.jpg"
@@ -89,4 +90,16 @@ def test_dither():
     # Non-existing file
     assert cosa.image is not None
     cosa.transform("dither")
+    assert cosa.transformed is not None
+
+
+def test_intarsia():
+    """Test `intarsia` transformation."""
+    input_path = "tests/test_files/miso.jpg"
+    cosa = Cosa()
+    # Existing file
+    cosa.read(input_path)
+    # Non-existing file
+    assert cosa.image is not None
+    cosa.transform("intarsia", height=50, width=50, num_colours=4)
     assert cosa.transformed is not None
